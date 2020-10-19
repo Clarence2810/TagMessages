@@ -1,0 +1,9 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Clarence2810/TagMessages
+build-by-default: true
+branches:
+- main
+projects:
+  TagMessages:
+    path: ""
+    icon: "icon.png"
+...
