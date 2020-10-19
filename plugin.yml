@@ -4,7 +4,7 @@ version: 1.0.0
 api: 3.15.0
 load: POSTWORLD
 author: Clarence2810
-description: Showing player messages below thier head
+description: Showing player own messages below thier own name
 
 commands:
   tagmessages:
