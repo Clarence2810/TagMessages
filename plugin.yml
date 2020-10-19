@@ -1,7 +1,7 @@
 name: TagMessages
 main: Clarence2810\tagmessages\Main
 version: 1.0.0
-api: 3.15.2
+api: 3.15.0
 load: POSTWORLD
 author: Clarence2810
 description: Showing player messages below thier head
