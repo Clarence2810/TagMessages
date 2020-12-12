@@ -12,9 +12,3 @@ If you have any kind of plugin installed that have a text below the name Aka Nam
 - After you type the issues and title click **Submit new issue** <br/>
 There you go you submitted the issue no need to rate 3-0 star! <br/>
 Ill make sure that im gonna try to fix it as much as i can 
-
-# Features and Etc.
-- Ofcource you can see player messages below their names (10 SECONDS ONLY)
-- Players can on and off putting their messages below their name (COMMAND)
-- More Soon...  Just Give me Suggestion down below <br/>
-*UHhhh the configuration file is soon (; PLEASE FORGIVE ME!!*
