@@ -14,9 +14,10 @@ use pocketmine\{
 };;
 class Main extends PluginBase implements Listener
 {
+	public static $tm = []; // Switch on and off
+	public static $first = []; // Secret formula
+	public static $new = []; // Secret formula
 	private const PREFIX = C::BOLD . C::AQUA . "TagMessages >> " . C::RESET;
-	private $running = [];
-	private static $tm = [];
 	private static $instance;
 	
 	public static function getInstance(): Main{
@@ -29,7 +30,13 @@ class Main extends PluginBase implements Listener
 	
 	public function onEnable()
 	{
+		$this->saveResource("config.yml");
+		$this->saveDefaultConfig();
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		if($this->getConfig()->get("config-version") < 1 or $this->getConfig()->get("config-version") == null){
+            $this->getLogger()->error("Your config file is outdated delete it and it will automatically updated!");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+        }
 	}
 	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args):bool{
 		if($sender instanceof Player){
@@ -42,24 +49,24 @@ class Main extends PluginBase implements Listener
 					case "on":
 					case "enable":
 					if(in_array($sender->getName(), self::$tm)){
-						$sender->sendMessage(self::PREFIX . C::GREEN . "Everyone can now see your messages below of your name!");
+						$sender->sendMessage(self::PREFIX . $this->getConfig()->get("tagmessages-on"));
 						unset(self::$tm[array_search($sender->getName(), self::$tm)]);
 					}else{
-						$sender->sendMessage(self::PREFIX . C::RED . "Your TagMessages is not even turned off");
+						$sender->sendMessage(self::PREFIX . $this->getConfig()->get("not-even-off"));
 					}
 					break;
 					case "off":
 					case "disable":
 					if(!in_array($sender->getName(), self::$tm)){
-						$sender->sendMessage(self::PREFIX . C::GREEN . "Everyone can't now see your messages below of your name!");
+						$sender->sendMessage(self::PREFIX . $this->getConfig()->get("tagmessages-off"));
 						self::$tm[] = $sender->getName();
 					}else{
-						$sender->sendMessage(self::PREFIX . C::RED . "Your TagMessages is not even turned on");
+						$sender->sendMessage(self::PREFIX . $this->getConfig()->get("not-even-on"));
 					}
 					break;
 					case "about":
 					case "info":
-					$sender->sendMessage(self::PREFIX . C::YELLOW . "Version: " . C::AQUA . $this->getDescription()->getVersion() . C::YELLOW . " by " . C::AQUA . "Clarence2810");
+					$sender->sendMessage(self::PREFIX . "TagMessages by Clarence2810");
 					$sender->sendMessage(C::GREEN . "Contact on Discord: " . C::AQUA . "Clarence2810#7952");
 					break;
 					default;
@@ -68,7 +75,7 @@ class Main extends PluginBase implements Listener
 				}
 			}
 		}else{
-			$sender->sendMessage(self::PREFIX . C::RED . "Im sorry but only players can run this command!");
+			$sender->sendMessage(self::PREFIX . $this->getConfig()->get("player-only"));
 		}
 		return true;
 	}
@@ -76,7 +83,10 @@ class Main extends PluginBase implements Listener
 		$player = $event->getPlayer();
 		$message = $event->getMessage();
 		if(!in_array($player->getName(), self::$tm)){
-			$this->getScheduler()->scheduleRepeatingTask(new TagTask($player, $message), 20);
+			$this->getScheduler()->scheduleRepeatingTask(new TagTask($player, $message, $this->getConfig()->get("tag-cooldown")), 20);
+			if(in_array($player->getName(), self::$first)){
+				self::$new[] = $player->getName();
+			}
 		}
 	}
 }
