@@ -5,23 +5,23 @@
 #   |_|\__,_|\__, |_|  |_|\___||___/___/\__,_|\__, |\___||___/
 #            |___/                            |___/           
 
-config-version: 1 # Hey dont touch me there this is my no no square (;
+config-version: 1 # Hey dont touch me there this is my no no square (; //bruh that sound so gay
 
 # SETUP THINGS HERE #
 
-player-only: §cIm sorry but only players can run this command!
+player-only: §4Im sorry but only players can run this command!
 
 # Cooldown how long message below the name
 tag-cooldown: 10
 
 # When player turn on thier tag message option using /tagmessages on/enable
-tagmessages-on: §aEveryone can now see your messages below of your name!
+tagmessages-on: §aEveryone now can see your messages under your name.
 
 # When player trying to turn on thier tag message option but its already on
-not-even-off: §cYour TagMessages is not even turned off
+not-even-off: §Your TagMessage is already turned §aon
 
 # When player turn off thier tag message option using /tagmessages off/disable
-tagmessages-off: §aEveryone can't now see your messages below of your name!
+tagmessages-off: §fEveryone now §ccannot see your message under your name.
 
 # When player trying to turn off thier tag message option but its already off
-not-even-on: §cYour TagMessages is not even turned on
+not-even-on: §fYour TagMessages is already turned §coff
