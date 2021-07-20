@@ -4,89 +4,67 @@ namespace Clarence2810\tagmessages;
 
 use pocketmine\{
 	Player,
-	Server,
-	plugin\PluginBase,
-	utils\Textformat as C,
-	event\Listener,
-	event\player\PlayerChatEvent,
 	command\Command,
 	command\CommandSender,
-};;
+	event\Listener,
+	event\player\PlayerChatEvent,
+	plugin\PluginBase,
+	utils\Textformat as C,
+};
 class Main extends PluginBase implements Listener
 {
-	public static $tm = []; // Switch on and off
-	public static $first = []; // Secret formula
-	public static $new = []; // Secret formula
+	public $datas = ["currently" => [], "upcoming" => [], "showtag" => [], "stop" => []];
 	private const PREFIX = C::BOLD . C::AQUA . "TagMessages >> " . C::RESET;
-	private static $instance;
 	
-	public static function getInstance(): Main{
-		return self::$instance;
-	}
-	
-	public function onLoad(){
-		self::$instance = $this;
-	}
-	
-	public function onEnable()
-	{
-		$this->saveResource("config.yml");
+	public function onEnable(){
 		$this->saveDefaultConfig();
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		if($this->getConfig()->get("config-version") < 1 or $this->getConfig()->get("config-version") == null){
-            $this->getLogger()->error("Your config file is outdated delete it and it will automatically updated!");
+		if($this->getConfig()->get("config-version") < 1 or $this->getConfig()->get("config-version") === null){
+            $this->getLogger()->error("Your config file is outdated delete it and a new one will automatically added!");
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
 	}
+	
 	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args):bool{
-		if($sender instanceof Player){
-			if(strtolower($cmd->getName()) === "tagmessages"){
-				if(empty($args)){
-					$sender->sendMessage(self::PREFIX . C::RED . "Usage: /tagmessages <on:off:about>");
-					return true;
-				}
-				switch(strtolower($args[0])){
-					case "on":
-					case "enable":
-					if(in_array($sender->getName(), self::$tm)){
-						$sender->sendMessage(self::PREFIX . $this->getConfig()->get("tagmessages-on"));
-						unset(self::$tm[array_search($sender->getName(), self::$tm)]);
-					}else{
-						$sender->sendMessage(self::PREFIX . $this->getConfig()->get("not-even-off"));
-					}
-					break;
-					case "off":
-					case "disable":
-					if(!in_array($sender->getName(), self::$tm)){
-						$sender->sendMessage(self::PREFIX . $this->getConfig()->get("tagmessages-off"));
-						self::$tm[] = $sender->getName();
-					}else{
-						$sender->sendMessage(self::PREFIX . $this->getConfig()->get("not-even-on"));
-					}
-					break;
-					case "about":
-					case "info":
-					$sender->sendMessage(self::PREFIX . "TagMessages by Clarence2810");
-					$sender->sendMessage(C::GREEN . "Contact on Discord: " . C::AQUA . "Clarence2810#7952");
-					break;
-					default;
-					$sender->sendMessage(self::PREFIX . C::RED . "Usage: /tagmessages <on:off:about>");
-					return true;
-				}
-			}
-		}else{
+		if(!$sender instanceof Player){
 			$sender->sendMessage(self::PREFIX . $this->getConfig()->get("player-only"));
+			return false;
+		}
+		if(empty($args)){
+			$sender->sendMessage(self::PREFIX . C::RED . "Usage: /tagmessages <on:off>");
+			return false;
+		}
+		switch(strtolower($args[0])){
+			case "on":
+			case "enable":
+				if(!in_array($sender->getName(), $this->datas["showtag"])){
+					$sender->sendMessage(self::PREFIX . $this->getConfig()->get("not-even-off"));
+					return false;
+				}
+				unset($this->datas["showtag"][array_search($sender->getName(), $this->datas["showtag"])]);
+				$sender->sendMessage(self::PREFIX . $this->getConfig()->get("tagmessages-on"));
+			break;
+			case "off":
+			case "disable":
+				if(in_array($sender->getName(), $this->datas["showtag"])){
+					$sender->sendMessage(self::PREFIX . $this->getConfig()->get("not-even-on"));
+					return false;
+				}
+				$sender->sendMessage(self::PREFIX . $this->getConfig()->get("tagmessages-off"));
+				$this->datas["showtag"][] = $sender->getName();
+			break;
+			default;
+				$sender->sendMessage(self::PREFIX . C::RED . "Usage: /tagmessages <on:off>");
+			return false;
 		}
 		return true;
 	}
-	public function onChat(PlayerChatEvent $event){
+	
+	public function onChat(PlayerChatEvent $event):void{
 		$player = $event->getPlayer();
-		$message = $event->getMessage();
-		if(!in_array($player->getName(), self::$tm)){
-			$this->getScheduler()->scheduleRepeatingTask(new TagTask($player, $message, $this->getConfig()->get("tag-cooldown")), 20);
-			if(in_array($player->getName(), self::$first)){
-				self::$new[] = $player->getName();
-			}
-		}
+		if(in_array($player->getName(), $this->datas["showtag"])) return;
+		$this->getScheduler()->scheduleRepeatingTask(new TagTask($this, $player, $event->getMessage(), $this->getConfig()->get("tag-cooldown")), 20);
+		if(in_array($player->getName(), $this->datas["currently"])) $this->datas["upcoming"][] = $player->getName();
+		if(!in_array($player->getName(), $this->datas["currently"])) $this->datas["currently"][] = $player->getName();
 	}
 }

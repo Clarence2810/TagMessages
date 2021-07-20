@@ -1,27 +1,27 @@
 #  _____           __  __                                     
 # |_   _|_ _  __ _|  \/  | ___  ___ ___  __ _  __ _  ___  ___   Plugin by: Clarence2810
-#   | |/ _` |/ _` | |\/| |/ _ \/ __/ __|/ _` |/ _` |/ _ \/ __|  Plugin updated: 4:45am 12/12/20 EST
-#   | | (_| | (_| | |  | |  __/\__ \__ \ (_| | (_| |  __/\__ \  Discord Server: https://discord.gg/Ad2uDSp
+#   | |/ _` |/ _` | |\/| |/ _ \/ __/ __|/ _` |/ _` |/ _ \/ __|  Plugin updated: 4:12am 7/20/21 EST
+#   | | (_| | (_| | |  | |  __/\__ \__ \ (_| | (_| |  __/\__ \  Donate Here: https://paypal.me/clarencemine
 #   |_|\__,_|\__, |_|  |_|\___||___/___/\__,_|\__, |\___||___/
 #            |___/                            |___/           
 
-config-version: 1 # Hey dont touch me there this is my no no square (;
+config-version: 1
 
 # SETUP THINGS HERE #
 
 player-only: §cIm sorry but only players can run this command!
 
-# Cooldown how long message below the name
+# Cooldown how long message under the name (Second Format)
 tag-cooldown: 10
 
 # When player turn on thier tag message option using /tagmessages on/enable
-tagmessages-on: §aEveryone can now see your messages below of your name!
+tagmessages-on: §aEveryone can now see your messages under your name!
 
 # When player trying to turn on thier tag message option but its already on
-not-even-off: §cYour TagMessages is not even turned off
+not-even-off: §cYour TagMessages is already turned on
 
 # When player turn off thier tag message option using /tagmessages off/disable
-tagmessages-off: §aEveryone can't now see your messages below of your name!
+tagmessages-off: §aEveryone cannot now see your message under your name.
 
 # When player trying to turn off thier tag message option but its already off
-not-even-on: §cYour TagMessages is not even turned on
+not-even-on: §cYour TagMessages is already turned off
