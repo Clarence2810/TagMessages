@@ -59,11 +59,17 @@ class Main extends PluginBase implements Listener
 		}
 		return true;
 	}
-	
+	/*** @var TagTask[] */
+	public $tasks = [];
 	public function onChat(PlayerChatEvent $event):void{
 		$player = $event->getPlayer();
 		if(in_array($player->getName(), $this->datas["showtag"])) return;
-		$this->getScheduler()->scheduleRepeatingTask(new TagTask($this, $player, $event->getMessage(), $this->getConfig()->get("tag-cooldown")), 20);
+		// cancel if there is a task still
+		if(($this->tasks[$player->getName()] ?? null) instanceof TagTask && $this->tasks[$player->getName()]->getHandler())
+			$this->tasks[$player->getName()]->getHandler()->cancel();
+		$task = new TagTask($this, $player, $event->getMessage(), $this->getConfig()->get("tag-cooldown"));
+		$this->tasks[$player->getName()] = $task;
+		$this->getScheduler()->scheduleRepeatingTask($task, 20);
 		if(in_array($player->getName(), $this->datas["currently"])) $this->datas["upcoming"][] = $player->getName();
 		if(!in_array($player->getName(), $this->datas["currently"])) $this->datas["currently"][] = $player->getName();
 	}
